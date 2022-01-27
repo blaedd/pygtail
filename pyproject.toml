@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "pygtail"
+version = "0.11.1"
+description = "Reads log file lines that have not been read."
+authors = ["Brad Greenlee <brad@footle.org>", "David MacKinnon <blaedd@gmail.com>"]
+maintainers = ["David MacKinnon <blaedd@gmail.com>"]
+
+license = "GPL-2.0-only"
+readme = "README.md"
+homepage = "https://github.com/blaedd/pygtail"
+repository = "https://github.com/blaedd/pygtail"
+keywords = ['logging', 'tail', 'logtail2']
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License (GPL)",
+    "Operating System :: MacOS :: MacOS X",
+    "Operating System :: POSIX :: Linux",
+    "Operating System :: Unix",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: System :: Logging"
+]
+[tool.poetry.dependencies]
+python = "^3.10"
+aiofiles = "^0.8.0"
+
+[tool.poetry.dev-dependencies]
+pytest = "^6.2.5"
+tox = "^3.24.5"
+tox-poetry = "^0.4.1"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
