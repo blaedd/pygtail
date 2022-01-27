@@ -22,7 +22,6 @@
 # along with this program; if not, write to the Free Software
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
-from __future__ import print_function
 from os import fstat, stat
 import os
 from os.path import exists, getsize
@@ -33,13 +32,7 @@ from optparse import OptionParser
 
 __version__ = '0.11.1'
 
-
-PY3 = sys.version_info[0] == 3
-
-if PY3:
-    text_type = str
-else:
-    text_type = unicode
+text_type = str
 
 
 def force_text(s, encoding='utf-8', errors='strict'):
@@ -63,8 +56,10 @@ class Pygtail(object):
     log_patterns  List of custom rotated log patterns to match (default: None)
     full_lines    Only log when line ends in a newline `\n` (default: False)
     """
+
     def __init__(self, filename, offset_file=None, paranoid=False, copytruncate=True,
-                 every_n=0, on_update=False, read_from_end=False, log_patterns=None, full_lines=False):
+                 every_n=0, on_update=False, read_from_end=False, log_patterns=None,
+                 full_lines=False):
         self.filename = filename
         self.paranoid = paranoid
         self.every_n = every_n
@@ -94,7 +89,7 @@ class Pygtail(object):
                 self._rotated_logfile = self._determine_rotated_logfile()
 
     def __del__(self):
-        if self._filehandle():
+        if self._fh:
             self._filehandle().close()
 
     def __iter__(self):
@@ -228,7 +223,7 @@ class Pygtail(object):
         # savelog(8)
         candidate = "%s.0" % self.filename
         if (exists(candidate) and exists("%s.1.gz" % self.filename) and
-            (stat(candidate).st_mtime > stat("%s.1.gz" % self.filename).st_mtime)):
+                (stat(candidate).st_mtime > stat("%s.1.gz" % self.filename).st_mtime)):
             return candidate
 
         # logrotate(8)
@@ -291,27 +286,27 @@ class Pygtail(object):
 def main():
     # command-line parsing
     cmdline = OptionParser(usage="usage: %prog [options] logfile",
-        description="Print log file lines that have not been read.")
+                           description="Print log file lines that have not been read.")
     cmdline.add_option("--offset-file", "-o", action="store",
-        help="File to which offset data is written (default: <logfile>.offset).")
+                       help="File to which offset data is written (default: <logfile>.offset).")
     cmdline.add_option("--paranoid", "-p", action="store_true",
-        help="Update the offset file every time we read a line (as opposed to"
-             " only when we reach the end of the file).")
+                       help="Update the offset file every time we read a line (as opposed to"
+                            " only when we reach the end of the file).")
     cmdline.add_option("--every-n", "-n", action="store",
-        help="Update the offset file every n'th time we read a line (as opposed to"
-             " only when we reach the end of the file).")
+                       help="Update the offset file every n'th time we read a line (as opposed to"
+                            " only when we reach the end of the file).")
     cmdline.add_option("--no-copytruncate", action="store_true",
-        help="Don't support copytruncate-style log rotation. Instead, if the log file"
-             " shrinks, print a warning.")
+                       help="Don't support copytruncate-style log rotation. Instead, if the log file"
+                            " shrinks, print a warning.")
     cmdline.add_option("--read-from-end", action="store_true",
-        help="Read log file from the end if offset file is missing. Useful for large files.")
+                       help="Read log file from the end if offset file is missing. Useful for large files.")
     cmdline.add_option("--log-pattern", action="append",
-        help="Custom log rotation glob pattern. Use %s to represent the original filename."
-             " You may use this multiple times to provide multiple patterns.")
+                       help="Custom log rotation glob pattern. Use %s to represent the original filename."
+                            " You may use this multiple times to provide multiple patterns.")
     cmdline.add_option("--full_lines", action="store_true",
                        help="Only log when line ends in a newline (\\n)")
     cmdline.add_option("--version", action="store_true",
-        help="Print version and exit.")
+                       help="Print version and exit.")
 
     options, args = cmdline.parse_args()
 
